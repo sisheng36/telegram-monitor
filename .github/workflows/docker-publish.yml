@@ -2,8 +2,6 @@ name: 构建Docker Image
   
 on:  
   push:  
-    branches:  
-      - main  
     tags:  
       - "v*.*.*"  
   pull_request:  
