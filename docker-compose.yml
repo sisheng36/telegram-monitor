@@ -13,8 +13,6 @@ services:
       # 覆盖 .env 中的 WEB_HOST，容器内必须监听 0.0.0.0  
       - WEB_HOST=0.0.0.0  
     volumes:  
-      # 持久化 Telegram session 文件（登录状态）  
-      - ./sessions:/app  
       # 持久化配置、日志、下载  
       - ./data:/app/data  
       - ./logs:/app/logs  
