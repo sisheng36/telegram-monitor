@@ -173,15 +173,20 @@ class WebApp:
             self.logger.error(f"验证登录凭据时发生错误: {e}")
             return False
     
-    def setup_static_files(self):
-        static_dir = Path("ui/static")
-        templates_dir = Path("ui/templates")
-        static_dir.mkdir(exist_ok=True)
-        templates_dir.mkdir(exist_ok=True)
+    def setup_static_files(self):  
+        static_dir = Path("ui/static")  
+        templates_dir = Path("ui/templates")  
+        static_dir.mkdir(exist_ok=True)  
+        templates_dir.mkdir(exist_ok=True)  
         
-        self.app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
-        
-        self.templates = Jinja2Templates(directory=str(templates_dir))
+        self.app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")  
+    
+        import jinja2  
+        env = jinja2.Environment(  
+            loader=jinja2.FileSystemLoader(str(templates_dir)),  
+            cache_size=0  
+        )  
+        self.templates = Jinja2Templates(env=env)
     
     def setup_routes(self):
         
