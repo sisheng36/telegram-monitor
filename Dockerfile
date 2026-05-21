@@ -19,4 +19,4 @@ RUN mkdir -p data logs downloads
   
 EXPOSE 8000  
   
-CMD ["python", "web_app_launcher.py", "--public"]
+CMD ["python", "web_app_launcher.py"]
