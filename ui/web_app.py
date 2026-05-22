@@ -224,8 +224,7 @@ class WebApp:
             if request.session.get("user"):
                 return RedirectResponse(url="/", status_code=302)
             
-            return self.templates.TemplateResponse("login.html", {
-                "request": request,
+            return self.templates.TemplateResponse(request, "login.html", {
                 "title": "登录"
             })
         
@@ -251,8 +250,7 @@ class WebApp:
                 return RedirectResponse(url="/login", status_code=302)
             
             user = self.get_current_user(request)
-            return self.templates.TemplateResponse("dashboard.html", {
-                "request": request,
+            return self.templates.TemplateResponse(request, "dashboard.html", {
                 "title": "监控仪表板",
                 "user": user
             })
@@ -260,8 +258,7 @@ class WebApp:
         @self.app.get("/logs", response_class=HTMLResponse)
         async def logs_page(request: Request):
             user = self.get_current_user(request)
-            return self.templates.TemplateResponse("logs.html", {
-                "request": request,
+            return self.templates.TemplateResponse(request, "logs.html", {
                 "title": "程序日志",
                 "user": user
             })
@@ -269,8 +266,7 @@ class WebApp:
         @self.app.get("/accounts", response_class=HTMLResponse)
         async def accounts_page(request: Request):
             user = self.get_current_user(request)
-            return self.templates.TemplateResponse("accounts.html", {
-                "request": request,
+            return self.templates.TemplateResponse(request, "accounts.html", {
                 "title": "账号管理",
                 "user": user
             })
@@ -278,8 +274,7 @@ class WebApp:
         @self.app.get("/monitors", response_class=HTMLResponse)
         async def monitors_page(request: Request):
             user = self.get_current_user(request)
-            return self.templates.TemplateResponse("monitors.html", {
-                "request": request,
+            return self.templates.TemplateResponse(request, "monitors.html", {
                 "title": "监控器管理",
                 "user": user
             })
@@ -293,9 +288,9 @@ class WebApp:
             edit_config = request.query_params.get('config', '{}')
             
             return self.templates.TemplateResponse(
+                request,
                 "wizard.html",
                 {
-                    "request": request,
                     "monitor_type": monitor_type,
                     "edit_mode": edit_mode,
                     "edit_key": edit_key,
@@ -308,24 +303,27 @@ class WebApp:
         async def scheduled_messages_page(request: Request):
             user = self.get_current_user(request)
             return self.templates.TemplateResponse(
+                request,
                 "scheduled_messages.html",
-                {"request": request, "user": user}
+                {"user": user}
             )
         
         @self.app.get("/channels", response_class=HTMLResponse)
         async def channels_page(request: Request):
             user = self.get_current_user(request)
             return self.templates.TemplateResponse(
+                request,
                 "channels.html",
-                {"request": request, "user": user}
+                {"user": user}
             )
         
         @self.app.get("/config-export", response_class=HTMLResponse)
         async def config_export_page(request: Request):
             user = self.get_current_user(request)
             return self.templates.TemplateResponse(
+                request,
                 "config_export.html",
-                {"request": request, "user": user}
+                {"user": user}
             )
         
         @self.app.get("/api/stats")
@@ -2313,4 +2311,4 @@ class WebApp:
         asyncio.create_task(status_updater())
     
     def get_app(self) -> FastAPI:
-        return self.app 
+        return self.app
