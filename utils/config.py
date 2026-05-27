@@ -85,7 +85,8 @@ class Config:
         
     
     def create_directories(self):
-        directories = [self.DATA_DIR, self.LOGS_DIR, self.DOWNLOADS_DIR]
+        self.SESSIONS_DIR = f"{self.DATA_DIR}/sessions"
+        directories = [self.DATA_DIR, self.LOGS_DIR, self.DOWNLOADS_DIR, self.SESSIONS_DIR]
         for directory in directories:
             Path(directory).mkdir(parents=True, exist_ok=True)
     
@@ -143,4 +144,4 @@ class Config:
             "downloads_dir": self.DOWNLOADS_DIR
         }
 
-config = Config() 
+config = Config()
