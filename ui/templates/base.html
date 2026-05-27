@@ -7,7 +7,12 @@
     
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMzIgMzIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzcyNjhFNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM1QjVGREUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjgiIGZpbGw9InVybCgjZykiLz4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0IDQpIj4KICAgIDxwYXRoIGZpbGw9ImJsYWNrIiBkPSJNMjEuMTczIDIuMTc2YS42LjYgMCAwIDEgLjgyNC42NWwtMy4wOSAxMy4zNGMtLjE3LjczLTEuMDIgMS4wNy0xLjY2LjY2bC00LjY1LTIuOTMtMi4yNSAyLjE5YS42Mi42MiAwIDAgMS0xLjAyLS4yMmwtMS0yLjcyLTMuMTQtMS4xYS42Mi42MiAwIDAgMS0uMDQtMS4xNkwyMC45IDIuMzJjLjEtLjA1LjE5LS4wOS4yNy0uMTR6bS00LjI3IDMuMjhMNy42IDEyLjM4bDIuNTMuODhjLjIuMDcuMzYuMjMuNDMuNDNsLjgzIDIuMjcgMS43Ni0xLjcxYy4yMS0uMi41NC0uMjQuNzktLjA4bDQuMDMgMi41NCAyLjQ5LTEwLjc0eiIvPgogIDwvZz4KPC9zdmc+">
 
-    
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" id="themeColorMeta" content="#0F0F1E">
+    <meta name="application-name" content="TG监控">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
@@ -1687,6 +1692,7 @@
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
+            updateThemeColor(savedTheme);
         }
         
         function updateThemeIcon(theme) {
@@ -1698,16 +1704,31 @@
             }
         }
         
+        function updateThemeColor(theme) {
+            const meta = document.getElementById('themeColorMeta');
+            if (meta) {
+                meta.content = theme === 'dark' ? '#0F0F1E' : '#FFFFFF';
+            }
+        }
+
         document.getElementById('themeToggle').addEventListener('click', function() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
+            updateThemeColor(newTheme);
         });
-        
-        initTheme();
+
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                    console.warn('Service Worker 注册失败:', err);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', registerServiceWorker);
         
         function updateUptime() {
             fetch('/api/stats')
