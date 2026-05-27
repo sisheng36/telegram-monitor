@@ -224,9 +224,8 @@ class AccountManager(metaclass=Singleton):
         return len(self.accounts)
     
     async def create_and_login_account(self, account_config_data: AccountConfig) -> Optional[Account]:
-        from utils.config import config as app_config
         try:
-            session_path = str(Path(app_config.SESSIONS_DIR) / account_config_data.session_name)
+            session_path = str(Path(config.SESSIONS_DIR) / account_config_data.session_name)
             client = TelegramClient(
                 session_path,
                 account_config_data.api_id,
@@ -246,8 +245,8 @@ class AccountManager(metaclass=Singleton):
             own_user_id = me.id
             
             account = Account(
-                account_id=config.phone,
-                config=config,
+                account_id=account_config_data.phone,
+                config=account_config_data,
                 client=client,
                 own_user_id=own_user_id,
                 monitor_active=True
@@ -255,7 +254,7 @@ class AccountManager(metaclass=Singleton):
             
             self.add_account(account)
             
-            self.logger.info(f"账号 {config.phone} 登录成功，用户ID: {own_user_id}")
+            self.logger.info(f"账号 {account_config_data.phone} 登录成功，用户ID: {own_user_id}")
             return account
             
         except Exception as e:
