@@ -526,8 +526,9 @@ class WebApp:
                 )
                 
                 from telethon import TelegramClient
+                session_path = str(Path(config.SESSIONS_DIR) / account_config.session_name)
                 client = TelegramClient(
-                    account_config.session_name,
+                    session_path,
                     account_config.api_id,
                     account_config.api_hash,
                     proxy=account_config.proxy
