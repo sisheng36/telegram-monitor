@@ -15,6 +15,7 @@ from telethon.errors import SessionPasswordNeededError
 from models import Account, AccountConfig
 from utils.singleton import Singleton
 from utils.logger import get_logger
+from utils.config import config
 
 
 class AccountManager(metaclass=Singleton):
@@ -106,8 +107,9 @@ class AccountManager(metaclass=Singleton):
             return False
         
         try:
+            session_path = str(Path(config.SESSIONS_DIR) / account.config.session_name)
             client = TelegramClient(
-                account.config.session_name,
+                session_path,
                 account.config.api_id,
                 account.config.api_hash,
                 proxy=account.config.proxy
@@ -170,7 +172,8 @@ class AccountManager(metaclass=Singleton):
             if account.client and account.client.is_connected():
                 asyncio.create_task(account.client.disconnect())
             
-            session_file = Path(f"{account.config.session_name}.session")
+            session_path = Path(config.SESSIONS_DIR) / account.config.session_name
+            session_file = session_path.with_suffix(".session")
             if session_file.exists():
                 try:
                     session_file.unlink()
@@ -178,7 +181,7 @@ class AccountManager(metaclass=Singleton):
                 except Exception as e:
                     self.logger.error(f"删除session文件失败: {e}")
             
-            session_journal = Path(f"{account.config.session_name}.session-journal")
+            session_journal = session_path.with_suffix(".session-journal")
             if session_journal.exists():
                 try:
                     session_journal.unlink()
@@ -220,19 +223,21 @@ class AccountManager(metaclass=Singleton):
     def get_account_count(self) -> int:
         return len(self.accounts)
     
-    async def create_and_login_account(self, config: AccountConfig) -> Optional[Account]:
+    async def create_and_login_account(self, account_config_data: AccountConfig) -> Optional[Account]:
+        from utils.config import config as app_config
         try:
+            session_path = str(Path(app_config.SESSIONS_DIR) / account_config_data.session_name)
             client = TelegramClient(
-                config.session_name,
-                config.api_id,
-                config.api_hash,
-                proxy=config.proxy
+                session_path,
+                account_config_data.api_id,
+                account_config_data.api_hash,
+                proxy=account_config_data.proxy
             )
             
             await client.connect()
             
             if not await client.is_user_authorized():
-                success = await self._login_process(client, config.phone)
+                success = await self._login_process(client, account_config_data.phone)
                 if not success:
                     await client.disconnect()
                     return None
@@ -360,4 +365,4 @@ class AccountFactory:
     @staticmethod
     async def create_account_from_config(config: AccountConfig) -> Optional[Account]:
         manager = AccountManager()
-        return await manager.create_and_login_account(config) 
+        return await manager.create_and_login_account(config)
