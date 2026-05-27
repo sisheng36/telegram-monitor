@@ -214,6 +214,14 @@ class WebApp:
         async def robots_txt():
             return "User-agent: *\nDisallow: /"
 
+        @self.app.get("/manifest.json")
+        async def manifest():
+            return FileResponse("ui/static/manifest.json", media_type="application/manifest+json")
+
+        @self.app.get("/sw.js")
+        async def service_worker():
+            return FileResponse("ui/static/sw.js", media_type="application/javascript")
+
         @self.app.post("/logout")
         async def logout(request: Request):
             request.session.clear()
