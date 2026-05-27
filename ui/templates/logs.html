@@ -64,7 +64,9 @@
     .logs-viewer {
         height: 70vh;
         overflow-y: auto;
-        background: white;
+        background: var(--glass-card);
+        -webkit-backdrop-filter: blur(12px) saturate(160%);
+        backdrop-filter: blur(12px) saturate(160%);
         color: var(--text-primary);
         font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
         font-size: 14px;
