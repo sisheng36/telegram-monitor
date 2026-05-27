@@ -27,7 +27,7 @@
             --primary-dark: #4A4EBD;
             --primary-light: #7B7FEE;
             --primary-gradient: linear-gradient(135deg, #5B5FDE 0%, #7B7FEE 100%);
-            --bg-gradient: linear-gradient(160deg, #070714 0%, #0F0F1E 30%, #151240 70%, #0d0a1a 100%);
+            --bg-gradient: linear-gradient(160deg, #141430 0%, #1C1C45 30%, #222255 60%, #181840 100%);
             
             --success-color: #10B981;
             --success-gradient: linear-gradient(135deg, #10B981 0%, #34D399 100%);
@@ -1222,7 +1222,7 @@
                     </div>
                     <span class="logo-text">
                         TG监控
-                        <span class="version-badge">v2.1.0</span>
+                        <span class="version-badge">v2.1.2</span>
                     </span>
                 </a>
             </div>
@@ -1737,6 +1737,7 @@
             updateThemeIcon(savedTheme);
             updateThemeColor(savedTheme);
         }
+        initTheme();
         
         function updateThemeIcon(theme) {
             const icon = document.getElementById('themeIcon');
